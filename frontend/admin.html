@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Admin Panel - StarUnion</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+
+        <div class="admin-sidebar">
+
+            <img src="/star logo.jpeg" alt="StarUnion Logo" class="logo">
+
+            <ul style="margin-top:20px;">
+
+                <li id="menuDashboard">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    Dashboard
+
+                </li>
+
+                <li id="menuUsers">
+
+                    <i class="fa-solid fa-users"></i>
+
+                    Users
+
+                </li>
+
+                <li id="menuVerification">
+
+                    <i class="fa-solid fa-user-check"></i>
+
+                    Seller Verification
+
+                </li>
+
+                <li id="menuAds">
+
+                    <i class="fa-solid fa-bullhorn"></i>
+
+                    Advertisements
+
+                </li>
+
+                <li id="menuBanned">
+
+                    <i class="fa-solid fa-ban"></i>
+
+                    Banned Accounts
+
+                </li>
+
+                <li id="menuSettings">
+
+                    <i class="fa-solid fa-gear"></i>
+
+                    Settings
+
+                </li>
+
+                <li onclick="logoutUser()">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    Logout
+
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- MAIN -->
+
+        <div class="admin-main">
+
+            <h1>
+
+                Admin Dashboard
+
+            </h1>
+
+            <!-- ===================================== -->
+            <!-- DASHBOARD -->
+            <!-- ===================================== -->
+
+            <section id="dashboardSection" class="admin-section">
+
+                <div class="dashboard-overview">
+
+                    <div class="overview-card">
+
+                        <h3>
+
+                            🚀 Quick Actions
+
+                        </h3>
+
+                        <button onclick="showSection('verification')">
+
+                            Review Seller Verification
+
+                        </button>
+
+                        <button onclick="showSection('users')">
+
+                            Manage Users
+
+                        </button>
+
+                        <button onclick="showSection('ads')">
+
+                            Manage Advertisements
+
+                        </button>
+
+                    </div>
+
+                    <div class="overview-card">
+
+                        <h3>
+
+                            📊 Platform Overview
+
+                        </h3>
+
+                        <p>
+
+                            Welcome to the StarUnion Admin Dashboard.
+
+                        </p>
+
+                        <p>
+
+                            Use the sidebar to manage users,
+                            advertisements, seller verification,
+                            settings and future payment packages.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <h3>
+
+                            Total Users
+
+                        </h3>
+
+                        <p id="totalUsers">
+
+                            0
+
+                        </p>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <h3>
+
+                            Seller Accounts
+
+                        </h3>
+
+                        <p id="totalSellers">
+
+                            0
+
+                        </p>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <h3>
+
+                            Pending Approval
+
+                        </h3>
+
+                        <p id="pendingSellers">
+
+                            0
+
+                        </p>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <h3>
+
+                            Total Ads
+
+                        </h3>
+
+                        <p id="totalAds">
+
+                            0
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ===================================== -->
+            <!-- USERS -->
+            <!-- ===================================== -->
+
+            <section id="usersSection" class="admin-section" style="display:none;">
+
+                <h2>
+
+                    Registered Accounts
+
+                </h2>
+
+                <div class="admin-search">
+
+                    <input type="text" id="searchInput" placeholder="Search by ID, Name, Mobile, Email"
+                        onkeyup="loadUsers()">
+
+                </div>
+
+                <div class="filter-bar">
+
+                    <button onclick="setFilter('all')">
+
+                        All
+
+                    </button>
+
+                    <button onclick="setFilter('user')">
+
+                        Normal Users
+
+                    </button>
+
+                    <button onclick="setFilter('advertiser')">
+
+                        Sellers
+
+                    </button>
+
+                    <button onclick="setFilter('pending')">
+
+                        Pending
+
+                    </button>
+
+                    <button onclick="setFilter('approved')">
+
+                        Approved
+
+                    </button>
+
+                    <button onclick="setFilter('banned')">
+
+                        Banned
+
+                    </button>
+
+                </div>
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Name</th>
+
+                            <th>Type</th>
+
+                            <th>Mobile</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="usersTable">
+
+                    </tbody>
+
+                </table>
+
+            </section>
+
+            <!-- ===================================== -->
+            <!-- VERIFICATION -->
+            <!-- ===================================== -->
+
+            <section id="verificationSection" class="admin-section" style="display:none;">
+
+                <h2>
+
+                    Pending Seller Verification
+
+                </h2>
+
+                <div id="verificationContainer">
+
+                </div>
+
+            </section>
+
+            <!-- ===================================== -->
+            <!-- ADVERTISEMENTS -->
+            <!-- ===================================== -->
+
+            <section id="adsSection" class="admin-section" style="display:none;">
+
+                <h2>
+
+                    Advertisement Management
+
+                </h2>
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Ad ID</th>
+
+                            <th>Business</th>
+
+                            <th>Category</th>
+
+                            <th>Location</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="adsContainer">
+
+                    </tbody>
+
+                </table>
+
+            </section>
+
+            <!-- ===================================== -->
+            <!-- BANNED -->
+            <!-- ===================================== -->
+
+            <section id="bannedSection" class="admin-section" style="display:none;">
+
+                <h2>
+
+                    Banned Accounts
+
+                </h2>
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Name</th>
+
+                            <th>Type</th>
+
+                            <th>Mobile</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="bannedUsersTable">
+
+                    </tbody>
+
+                </table>
+
+            </section>
+
+            <!-- ===================================== -->
+            <!-- SETTINGS -->
+            <!-- ===================================== -->
+
+            <section id="settingsSection" class="admin-section" style="display:none;">
+
+                <h2>
+
+                    Settings
+
+                </h2>
+
+                <p>
+
+                    Coming Soon...
+
+                </p>
+
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- CUSTOM MODAL -->
+    <!-- ===================================== -->
+
+    <div id="customModal" class="custom-modal">
+
+        <div class="custom-modal-box">
+
+            <h2 id="modalTitle">
+
+                Confirmation
+
+            </h2>
+
+            <p id="modalMessage">
+
+                Message
+
+            </p>
+
+            <div class="modal-buttons">
+
+                <button id="modalCancel" class="modal-cancel">
+
+                    Cancel
+
+                </button>
+
+                <button id="modalOk" class="modal-ok">
+
+                    OK
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script>
+
+        const user =
+            requireAdmin();
+
+    </script>
+
+    <script src="script.js"></script>
+
+    <script src="admin.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>StarUnion.in</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="header-left">
+
+            <img src="/star logo.jpeg" alt="StarUnion Logo" class="logo">
+
+            <div class="brand">
+
+                <h2>StarUnion</h2>
+
+                <span>
+                    India's Local Business Network
+                </span>
+
+            </div>
+
+        </div>
+
+        <nav class="main-nav">
+
+            <a href="#" class="active">
+                Home
+            </a>
+
+            <a href="#">
+                Browse Ads
+            </a>
+
+            <a href="#">
+                Categories
+            </a>
+
+            <a href="#">
+                How It Works
+            </a>
+
+            <a href="#">
+                About
+            </a>
+
+        </nav>
+
+        <div id="authArea" class="auth-area">
+
+            <a href="auth.html" id="loginBtn" class="login-btn">
+
+                Login
+
+            </a>
+
+            <a href="auth.html#register" id="registerBtn" class="register-btn">
+
+                Register
+
+            </a>
+
+        </div>
+
+        <div id="userArea" style="display:none;">
+
+            <span id="userName"></span>
+
+            <button onclick="logout()" class="logout-btn">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-overlay">
+
+            <h1>
+
+                Discover
+
+                <span>
+
+                    Local Businesses
+
+                </span>
+
+                Across India
+
+            </h1>
+
+            <p>
+
+                Search verified businesses, services,
+                professionals and opportunities near you.
+
+            </p>
+
+            <div class="search-box">
+
+                <input type="text" id="searchName" placeholder="Search Business Name">
+
+                <input type="text" id="searchLocation" placeholder="City">
+
+                <select id="searchCategory">
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    <option>
+                        Salon
+                    </option>
+
+                    <option>
+                        Restaurant
+                    </option>
+
+                    <option>
+                        Medical
+                    </option>
+
+                    <option>
+                        Jobs
+                    </option>
+
+                    <option>
+                        Freelancer
+                    </option>
+
+                    <option>
+                        Lebors
+                    </option>
+
+                </select>
+
+                <button id="searchButton">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Search
+
+                </button>
+
+            </div>
+
+            <div class="hero-stats">
+
+                <div class="hero-stat">
+
+                    <h3 id="heroAds">
+
+                        0
+
+                    </h3>
+
+                    <span>
+
+                        Advertisements
+
+                    </span>
+
+                </div>
+
+                <div class="hero-stat">
+
+                    <h3 id="heroBusinesses">
+
+                        0
+
+                    </h3>
+
+                    <span>
+
+                        Businesses
+
+                    </span>
+
+                </div>
+
+                <div class="hero-stat">
+
+                    <h3 id="heroCategories">
+
+                        5+
+
+                    </h3>
+
+                    <span>
+
+                        Categories
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- POPULAR CATEGORIES -->
+
+    <section class="categories">
+
+        <h2 class="section-title">
+
+            Popular Categories
+
+        </h2>
+
+        <p class="section-subtitle">
+
+            Explore businesses by category
+
+        </p>
+
+        <div class="category-grid">
+
+            <div class="category-card" data-category="Salon">
+
+                <div class="category-icon">
+                    💇
+                </div>
+
+                <h3>Salon</h3>
+
+                <span id="salonCount">
+                    0 Ads
+                </span>
+
+            </div>
+
+            <div class="category-card" data-category="Restaurant">
+
+                <div class="category-icon">
+                    🍽
+                </div>
+
+                <h3>Restaurant</h3>
+
+                <span id="restaurantCount">
+                    0 Ads
+                </span>
+
+            </div>
+
+            <div class="category-card" data-category="Medical">
+
+                <div class="category-icon">
+                    🏥
+                </div>
+
+                <h3>Medical</h3>
+
+                <span id="medicalCount">
+                    0 Ads
+                </span>
+
+            </div>
+
+            <div class="category-card" data-category="Jobs">
+
+                <div class="category-icon">
+                    💼
+                </div>
+
+                <h3>Jobs</h3>
+
+                <span id="jobsCount">
+                    0 Ads
+                </span>
+
+            </div>
+
+            <div class="category-card" data-category="Freelancer">
+
+                <div class="category-icon">
+                    🎯
+                </div>
+
+                <h3>Freelancer</h3>
+
+                <span id="freelancerCount">
+                    0 Ads
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FEATURED ADS -->
+
+    <section class="ads">
+
+        <h2 class="section-title">
+
+            Featured Advertisements
+
+        </h2>
+
+        <p class="section-subtitle">
+
+            Discover verified local businesses
+
+        </p>
+
+        <div class="ad-grid" id="featuredAds">
+
+        </div>
+
+    </section>
+
+    <!-- LATEST ADS -->
+
+    <section class="ads latest-section">
+
+        <h2 class="section-title">
+
+            Latest Advertisements
+
+        </h2>
+
+        <p class="section-subtitle">
+
+            Recently added businesses
+
+        </p>
+
+        <div class="ad-grid" id="latestAds">
+
+        </div>
+
+    </section>
+
+    <!-- WHY STARUNION -->
+
+    <section class="why-section">
+
+        <h2 class="section-title">
+
+            Why Choose StarUnion?
+
+        </h2>
+
+        <div class="why-grid">
+
+            <div class="why-card">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+                <h3>Verified Businesses</h3>
+
+                <p>
+                    Trusted and approved advertisers.
+                </p>
+
+            </div>
+
+            <div class="why-card">
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                <h3>Local Search</h3>
+
+                <p>
+                    Find businesses near your location.
+                </p>
+
+            </div>
+
+            <div class="why-card">
+
+                <i class="fa-solid fa-phone"></i>
+
+                <h3>Direct Contact</h3>
+
+                <p>
+                    Contact businesses instantly.
+                </p>
+
+            </div>
+
+            <div class="why-card">
+
+                <i class="fa-solid fa-bolt"></i>
+
+                <h3>Fast Growing</h3>
+
+                <p>
+                    Promote your business quickly.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- BECOME ADVERTISER -->
+
+    <section class="join-section">
+
+        <h2>
+
+            Grow Your Business with StarUnion
+
+        </h2>
+
+        <p>
+
+            Create your business profile and reach thousands of customers across India.
+
+        </p>
+
+        <a href="auth.html#register" class="register-btn">
+
+            Become an Advertiser
+
+        </a>
+
+    </section>
+
+    <!-- VIDEO POPUP -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <video controls id="adVideo">
+                <source src="sample.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <footer class="footer">
+
+        <div class="footer-container">
+
+            <!-- LOGO -->
+            <div class="footer-col">
+                <h2>⭐ StarUnion.in</h2>
+                <p>Advertise your business & get real customers.</p>
+            </div>
+
+            <!-- LINKS -->
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <p>Home</p>
+                <p>Advertise</p>
+                <p>How it Works</p>
+                <p>About</p>
+            </div>
+
+            <!-- CATEGORIES -->
+            <div class="footer-col">
+                <h3>Popular Categories</h3>
+                <p>Salons</p>
+                <p>Restaurants</p>
+                <p>Medical</p>
+                <p>Jobs</p>
+                <p>Freelancers</p>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="footer-col">
+                <h3>Contact</h3>
+                <p>Email: support@starunion.in</p>
+                <p>Phone: +91 8000000434</p>
+                <p>Rajkot, India</p>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            © 2026 StarUnion.in | All Rights Reserved
+        </div>
+
+    </footer>
+
+    <!-- BOTTOM NAVIGATION -->
+
+    <div class="bottom-nav">
+
+        <a id="nav1" href="index.html" class="bottom-item">
+
+            <i id="nav1Icon" class="fa-solid fa-house"></i>
+
+            <span id="nav1Text">
+
+                Home
+
+            </span>
+
+        </a>
+
+        <a id="nav2" href="#" class="bottom-item">
+
+            <i id="nav2Icon" class="fa-solid fa-right-to-bracket"></i>
+
+            <span id="nav2Text">
+
+                Login
+
+            </span>
+
+        </a>
+
+        <a id="nav3" href="#" class="bottom-item">
+
+            <i id="nav3Icon" class="fa-solid fa-user-plus"></i>
+
+            <span id="nav3Text">
+
+                Register
+
+            </span>
+
+        </a>
+
+        <a id="nav4" href="#" class="bottom-item">
+
+            <i id="nav4Icon" class="fa-solid fa-user"></i>
+
+            <span id="nav4Text">
+
+                Profile
+
+            </span>
+
+        </a>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

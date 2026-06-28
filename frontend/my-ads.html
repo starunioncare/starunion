@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>My Advertisements - StarUnion</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+
+    <div class="seller-dashboard">
+
+        <!-- TOP HEADER -->
+
+        <div class="seller-top">
+
+            <div>
+
+                <h1>
+
+                    My Advertisements
+
+                </h1>
+
+                <p>
+
+                    Manage all your advertisements from here.
+
+                </p>
+
+            </div>
+
+            <div class="dashboard-menu">
+
+                <a href="profile.html">
+
+                    Dashboard
+
+                </a>
+
+                <a href="create-ad.html">
+
+                    Create Ad
+
+                </a>
+
+                <a href="my-ads.html">
+
+                    My Ads
+
+                </a>
+
+                <a href="business-profile.html">
+
+                    Business Profile
+
+                </a>
+
+                <a href="#" onclick="logoutUser()">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div id="myAdsContainer" class="recent-ads-grid">
+
+            <div class="empty-box">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script>
+
+        const user =
+            requireAdvertiser();
+
+        async function loadMyAds() {
+
+            const res =
+                await fetch(
+                    `${API_BASE}/api/ads`
+                );
+
+            const ads =
+                await res.json();
+
+            const myAds =
+                ads.filter(
+                    ad =>
+                        ad.sellerId ===
+                        user.sellerId
+                );
+
+            const container =
+                document.getElementById(
+                    "myAdsContainer"
+                );
+
+            container.innerHTML = "";
+
+            if (
+                myAds.length === 0
+            ) {
+
+                container.innerHTML = `
+
+                <div class="empty-box">
+
+                    No advertisements found.
+
+                </div>
+
+                `;
+
+                return;
+
+            }
+
+            myAds
+                .slice()
+                .reverse()
+                .forEach(ad => {
+
+                    const image =
+
+                        ad.images &&
+                            ad.images.length > 0
+
+                            ?
+
+                            `${API_BASE}/uploads/${ad.images[0]}`
+
+                            :
+
+                            "https://via.placeholder.com/400x250";
+
+                    container.innerHTML += `
+
+                    <div class="market-card">
+
+                        <div class="market-image">
+
+                            <img
+                                src="${image}"
+                                alt="${ad.businessName}">
+
+                        </div>
+
+                        <div class="market-body">
+
+                            <h2>
+
+                                ${ad.businessName}
+
+                            </h2>
+
+                            <p>
+
+                                📍 ${ad.location}
+
+                            </p>
+
+                            <p>
+
+                                🏷 ${ad.category}
+
+                            </p>
+
+                            <p>
+
+                                Status :
+
+                                ${ad.status === "active"
+
+                            ?
+
+                            "🟢 Active"
+
+                            :
+
+                            ad.status === "banned"
+
+                                ?
+
+                                "🔴 Banned"
+
+                                :
+
+                                "🟡 Pending"
+
+                        }
+
+                            </p>
+
+                            <div
+                                style="
+                                display:flex;
+                                gap:10px;
+                                flex-wrap:wrap;
+                                margin-top:15px;">
+
+                                <button
+                                    class="details-btn"
+                                    onclick="
+                                    window.location.href=
+                                    'edit-ad.html?id=${ad.adId}'
+                                    ">
+
+                                    Edit
+
+                                </button>
+
+                                <button
+                                    class="details-btn"
+                                    onclick="
+                                    window.location.href=
+                                    'view-ad.html?id=${ad.adId}'
+                                    ">
+
+                                    View
+
+                                </button>
+
+                                <button
+                                    class="details-btn"
+                                    onclick="
+                                    deleteAd('${ad.adId}')
+                                    ">
+
+                                    Delete
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    `;
+
+                });
+
+        }
+
+        async function deleteAd(adId) {
+
+            const confirmDelete =
+                confirm(
+                    "Delete this advertisement?"
+                );
+
+            if (!confirmDelete)
+                return;
+
+            await fetch(
+
+                `${API_BASE}/api/delete-ad/${adId}`,
+
+                {
+                    method: "DELETE"
+                }
+
+            );
+
+            loadMyAds();
+
+        }
+
+
+        loadMyAds();
+
+    </script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

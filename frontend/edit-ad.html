@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Edit Advertisement - StarUnion</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+
+    <div class="seller-dashboard">
+
+        <!-- TOP HEADER -->
+
+        <div class="seller-top">
+
+            <div>
+
+                <h1>
+
+                    Edit Advertisement
+
+                </h1>
+
+                <p>
+
+                    Update your advertisement information.
+
+                </p>
+
+            </div>
+
+            <div class="dashboard-menu">
+
+                <a href="profile.html">
+
+                    Dashboard
+
+                </a>
+
+                <a href="create-ad.html">
+
+                    Create Ad
+
+                </a>
+
+                <a href="my-ads.html">
+
+                    My Ads
+
+                </a>
+
+                <a href="business-profile.html">
+
+                    Business Profile
+
+                </a>
+
+                <a href="#" onclick="logoutUser()">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="ad-form-container">
+
+            <h2>
+
+                Edit Advertisement
+
+            </h2>
+
+            <form id="editForm">
+
+                <input type="text" id="businessName" placeholder="Business Name" required>
+
+                <select id="category" required>
+
+                    <option value="">
+                        Select Category
+                    </option>
+
+                    <option>Salon</option>
+                    <option>Restaurant</option>
+                    <option>Medical</option>
+                    <option>Jobs</option>
+                    <option>Freelancer</option>
+
+                </select>
+
+                <input type="text" id="location" placeholder="Location" required>
+
+                <textarea id="description" placeholder="Description" required></textarea>
+
+                <input type="text" id="phone" placeholder="Phone" required>
+
+                <input type="text" id="whatsapp" placeholder="WhatsApp">
+
+                <button type="submit">
+
+                    Save Changes
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script>
+
+        const user =
+            requireAdvertiser();
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const adId =
+            params.get("id");
+
+        async function loadAd() {
+
+            const res =
+                await fetch(
+                    `${API_BASE}/api/ads`
+                );
+
+            const ads =
+                await res.json();
+
+            const ad =
+                ads.find(
+                    ad =>
+                        ad.adId === adId
+                );
+
+            if (!ad) {
+
+                alert(
+                    "Advertisement not found"
+                );
+
+                window.location.href =
+                    "my-ads.html";
+
+                return;
+
+            }
+
+            document.getElementById(
+                "businessName"
+            ).value =
+                ad.businessName;
+
+            document.getElementById(
+                "category"
+            ).value =
+                ad.category;
+
+            document.getElementById(
+                "location"
+            ).value =
+                ad.location;
+
+            document.getElementById(
+                "description"
+            ).value =
+                ad.description;
+
+            document.getElementById(
+                "phone"
+            ).value =
+                ad.phone;
+
+            document.getElementById(
+                "whatsapp"
+            ).value =
+                ad.whatsapp;
+
+        }
+
+        document
+            .getElementById(
+                "editForm"
+            )
+            .addEventListener(
+                "submit",
+                async (e) => {
+
+                    e.preventDefault();
+
+                    const updatedAd = {
+
+                        businessName:
+                            document.getElementById(
+                                "businessName"
+                            ).value,
+
+                        category:
+                            document.getElementById(
+                                "category"
+                            ).value,
+
+                        location:
+                            document.getElementById(
+                                "location"
+                            ).value,
+
+                        description:
+                            document.getElementById(
+                                "description"
+                            ).value,
+
+                        phone:
+                            document.getElementById(
+                                "phone"
+                            ).value,
+
+                        whatsapp:
+                            document.getElementById(
+                                "whatsapp"
+                            ).value
+
+                    };
+
+                    const res =
+                        await fetch(
+                            `${API_BASE}/api/update-ad/${adId}`,
+                            {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+                                body:
+                                    JSON.stringify(
+                                        updatedAd
+                                    )
+                            }
+                        );
+
+                    const data =
+                        await res.json();
+
+                    if (data.success) {
+
+                        alert(
+                            "Advertisement Updated Successfully!"
+                        );
+
+                        window.location.href =
+                            "my-ads.html";
+
+                    }
+
+                }
+            );
+
+        loadAd();
+
+    </script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

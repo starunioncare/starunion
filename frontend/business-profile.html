@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Business Profile - StarUnion</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <div class="seller-dashboard">
+
+        <!-- TOP HEADER -->
+
+        <div class="seller-top">
+
+            <div>
+
+                <h1>
+
+                    Business Profile
+
+                </h1>
+
+                <p>
+
+                    Manage your business information and verification documents.
+
+                </p>
+
+            </div>
+
+            <div class="dashboard-menu">
+
+                <a href="profile.html">
+
+                    Dashboard
+
+                </a>
+
+                <a href="create-ad.html">
+
+                    Create Ad
+
+                </a>
+
+                <a href="my-ads.html">
+
+                    My Ads
+
+                </a>
+
+                <a href="business-profile.html" class="active">
+
+                    Business Profile
+
+                </a>
+
+                <a href="#" onclick="logoutUser()">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- SELLER INFORMATION -->
+
+        <div class="seller-info-card">
+
+            <h2>
+
+                Seller Information
+
+            </h2>
+
+            <p>
+
+                <strong>Name :</strong>
+
+                <span id="sellerName">
+
+                    Loading...
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Seller ID :</strong>
+
+                <span id="sellerId">
+
+                    Loading...
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Email :</strong>
+
+                <span id="sellerEmail">
+
+                    Loading...
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Mobile :</strong>
+
+                <span id="sellerMobile">
+
+                    Loading...
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Status :</strong>
+
+                <span id="sellerStatus">
+
+                    Loading...
+
+                </span>
+
+            </p>
+
+        </div>
+
+        <!-- BUSINESS INFORMATION -->
+
+        <!-- BUSINESS INFORMATION -->
+
+        <div class="seller-info-card">
+
+            <h2>
+
+                Business Information
+
+            </h2>
+
+            <input type="text" id="businessName" placeholder="Business Name">
+
+            <br><br>
+
+            <input type="text" id="businessCategory" placeholder="Business Category">
+
+            <br><br>
+
+            <input type="text" id="businessLocation" placeholder="Business Location">
+
+            <br><br>
+
+            <textarea id="businessDescription" placeholder="Business Description" rows="5"></textarea>
+
+            <br><br>
+
+            <button onclick="saveBusinessProfile()">
+
+                Save Business Profile
+
+            </button>
+
+        </div>
+
+        <!-- DOCUMENTS -->
+
+        <div class="seller-info-card">
+
+            <h2>
+
+                Verification Documents
+
+            </h2>
+
+            <div class="document-grid">
+
+                <div class="document-box">
+
+                    <h4>
+
+                        Selfie
+
+                    </h4>
+
+                    <img id="selfiePhoto" src="" alt="Selfie">
+
+                </div>
+
+                <div class="document-box">
+
+                    <h4>
+
+                        Aadhaar Front
+
+                    </h4>
+
+                    <img id="aadharFront" src="" alt="Aadhaar Front">
+
+                </div>
+
+                <div class="document-box">
+
+                    <h4>
+
+                        Aadhaar Back
+
+                    </h4>
+
+                    <img id="aadharBack" src="" alt="Aadhaar Back">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- QUICK ACTIONS -->
+
+        <div class="dashboard-section">
+
+            <h2>
+
+                Quick Actions
+
+            </h2>
+
+            <div class="quick-actions">
+
+                <a href="create-ad.html" class="quick-btn">
+
+                    ➕ Create Advertisement
+
+                </a>
+
+                <a href="my-ads.html" class="quick-btn">
+
+                    📢 My Advertisements
+
+                </a>
+
+                <a href="edit-ad.html" class="quick-btn">
+
+                    ✏ Edit Advertisement
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script>
+
+        const user =
+            requireAdvertiser();
+
+        async function loadSellerProfile() {
+
+            const res =
+                await fetch(
+                    `${API_BASE}/api/users`
+                );
+
+            const users =
+                await res.json();
+
+            const seller =
+                users.find(
+                    u =>
+                        u.sellerId ===
+                        user.sellerId
+                );
+
+            if (!seller) {
+
+                alert(
+                    "Seller not found."
+                );
+
+                return;
+
+            }
+
+            document.getElementById(
+                "sellerName"
+            ).textContent =
+                seller.name;
+
+            document.getElementById(
+                "sellerId"
+            ).textContent =
+                seller.sellerId;
+
+            document.getElementById(
+                "sellerEmail"
+            ).textContent =
+                seller.email;
+
+            document.getElementById(
+                "sellerMobile"
+            ).textContent =
+                seller.mobile;
+
+            document.getElementById(
+                "sellerStatus"
+            ).textContent =
+                seller.status;
+
+            document.getElementById(
+                "businessName"
+            ).value =
+                seller.businessName || "";
+
+            document.getElementById(
+                "businessCategory"
+            ).value =
+                seller.businessCategory || "";
+
+            document.getElementById(
+                "businessLocation"
+            ).value =
+                seller.businessLocation || "";
+
+            document.getElementById(
+                "businessDescription"
+            ).value =
+                seller.businessDescription || "";
+
+            document.getElementById(
+                "selfiePhoto"
+            ).src =
+                `${API_BASE}/uploads/${seller.selfiePhoto}`;
+
+            document.getElementById(
+                "aadharFront"
+            ).src =
+                `${API_BASE}/uploads/${seller.aadharFront}`;
+
+            document.getElementById(
+                "aadharBack"
+            ).src =
+                `${API_BASE}/uploads/${seller.aadharBack}`;
+
+        }
+
+        loadSellerProfile();
+
+        async function saveBusinessProfile() {
+
+            const businessData = {
+
+                businessName:
+                    document.getElementById(
+                        "businessName"
+                    ).value,
+
+                businessCategory:
+                    document.getElementById(
+                        "businessCategory"
+                    ).value,
+
+                businessLocation:
+                    document.getElementById(
+                        "businessLocation"
+                    ).value,
+
+                businessDescription:
+                    document.getElementById(
+                        "businessDescription"
+                    ).value
+
+            };
+
+            const res =
+                await fetch(
+
+                    `${API_BASE}/api/update-business-profile/${user.id}`,
+
+                    {
+
+                        method: "PUT",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                businessData
+                            )
+
+                    }
+
+                );
+
+            const data =
+                await res.json();
+
+            if (data.success) {
+
+                alert(
+                    "Business Profile Updated Successfully!"
+                );
+
+                loadSellerProfile();
+
+            } else {
+
+                alert(
+                    data.message
+                );
+
+            }
+
+        }
+
+
+    </script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

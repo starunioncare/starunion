@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Dashboard - StarUnion</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <div class="seller-dashboard">
+
+        <!-- TOP HEADER -->
+        <div class="seller-top">
+
+            <div>
+
+                <h1>
+                    Welcome,
+                    <span id="sellerName">Seller</span> 👋
+                </h1>
+
+                <p>
+                    Manage your advertisements from one place.
+                </p>
+
+            </div>
+
+            <div class="dashboard-menu">
+
+                <a href="profile.html" class="active">
+                    Dashboard
+                </a>
+
+                <a href="create-ad.html">
+                    Create Ad
+                </a>
+
+                <a href="my-ads.html">
+                    My Ads
+                </a>
+
+                <a href="#" onclick="logoutUser()">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- SELLER INFORMATION -->
+
+        <div class="seller-info-card">
+
+            <h2>
+                Seller Information
+            </h2>
+
+            <p>
+
+                <strong>Seller ID :</strong>
+
+                <span id="sellerId"></span>
+
+            </p>
+
+            <p>
+
+                <strong>Account Status :</strong>
+
+                <span id="sellerStatus"></span>
+
+            </p>
+
+        </div>
+
+        <!-- STATISTICS -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <h3>Total Ads</h3>
+
+                <p id="totalAds">0</p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h3>Active Ads</h3>
+
+                <p id="activeAds">0</p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h3>Banned Ads</h3>
+
+                <p id="bannedAds">0</p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h3>Account</h3>
+
+                <p id="sellerStatusCard">
+                    Approved
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- QUICK ACTIONS -->
+
+        <div class="dashboard-section">
+
+            <h2>
+
+                Quick Actions
+
+            </h2>
+
+            <div class="quick-actions">
+
+                <a href="my-ads.html">
+
+                    My Ads
+
+                </a>
+
+                <a href="business-profile.html">
+
+                    Business Profile
+
+                </a>
+
+                <a href="#" onclick="logoutUser()">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- RECENT ADS -->
+
+        <div class="dashboard-section">
+
+            <h2>
+
+                Recent Advertisements
+
+            </h2>
+
+            <div id="recentAds" class="recent-ads-grid">
+
+                <div class="empty-box">
+
+                    Loading advertisements...
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script src="profile.js"></script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

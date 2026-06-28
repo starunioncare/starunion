@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Create Ad - StarUnion</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+
+    <div class="seller-dashboard">
+
+        <!-- TOP HEADER -->
+
+        <div class="seller-top">
+
+            <div>
+
+                <h1>
+
+                    Create Advertisement
+
+                </h1>
+
+                <p>
+
+                    Create a professional advertisement
+                    for your business.
+
+                </p>
+
+            </div>
+
+            <div class="dashboard-menu">
+
+                <a href="profile.html">
+
+                    Dashboard
+
+                </a>
+
+                <a href="create-ad.html" class="active">
+
+                    Create Ad
+
+                </a>
+
+                <a href="my-ads.html">
+
+                    My Ads
+
+                </a>
+
+                <a href="business-profile.html">
+
+                    Business Profile
+
+                </a>
+
+                <a href="#" onclick="logoutUser()">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- CREATE AD FORM -->
+
+        <div class="ad-form-container">
+
+            <h2>
+
+                Create Your Advertisement
+
+            </h2>
+
+            <form id="adForm">
+
+                <!-- BUSINESS NAME -->
+
+                <input type="text" id="businessName" placeholder="Business Name" required>
+
+                <!-- CATEGORY -->
+
+                <select id="category" required>
+
+                    <option value="">
+
+                        Select Category
+
+                    </option>
+
+                    <option>
+
+                        Salon
+
+                    </option>
+
+                    <option>
+
+                        Restaurant
+
+                    </option>
+
+                    <option>
+
+                        Medical
+
+                    </option>
+
+                    <option>
+
+                        Jobs
+
+                    </option>
+
+                    <option>
+
+                        Freelancer
+
+                    </option>
+
+                </select>
+
+                <!-- LOCATION -->
+
+                <input type="text" id="location" placeholder="Location (City)" required>
+
+                <!-- DESCRIPTION -->
+
+                <textarea id="description" placeholder="Describe your service" required></textarea>
+
+                <!-- VIDEO -->
+
+                <label>
+
+                    Upload Video
+
+                </label>
+
+                <input type="file" id="adVideo" accept="video/*">
+
+                <!-- IMAGES -->
+
+                <label>
+
+                    Upload Images
+
+                </label>
+
+                <input type="file" id="adImages" accept="image/*" multiple>
+
+                <!-- PHONE -->
+
+                <input type="text" id="phone" placeholder="Phone Number" required>
+
+                <!-- WHATSAPP -->
+
+                <input type="text" id="whatsapp" placeholder="WhatsApp Number">
+
+                <!-- SUBMIT -->
+
+                <button type="submit">
+
+                    Post Advertisement
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script>
+
+        const user =
+            requireAdvertiser();
+
+        document
+            .getElementById("adForm")
+            .addEventListener(
+                "submit",
+                async (e) => {
+
+                    e.preventDefault();
+
+                    const formData =
+                        new FormData();
+
+                    formData.append(
+                        "sellerId",
+                        user.sellerId
+                    );
+
+                    formData.append(
+                        "businessName",
+                        document.getElementById(
+                            "businessName"
+                        ).value
+                    );
+
+                    formData.append(
+                        "category",
+                        document.getElementById(
+                            "category"
+                        ).value
+                    );
+
+                    formData.append(
+                        "location",
+                        document.getElementById(
+                            "location"
+                        ).value
+                    );
+
+                    formData.append(
+                        "description",
+                        document.getElementById(
+                            "description"
+                        ).value
+                    );
+
+                    formData.append(
+                        "phone",
+                        document.getElementById(
+                            "phone"
+                        ).value
+                    );
+
+                    formData.append(
+                        "whatsapp",
+                        document.getElementById(
+                            "whatsapp"
+                        ).value
+                    );
+
+                    const video =
+                        document.getElementById(
+                            "adVideo"
+                        ).files[0];
+
+                    if (video) {
+
+                        formData.append(
+                            "video",
+                            video
+                        );
+
+                    }
+
+                    const images =
+                        document.getElementById(
+                            "adImages"
+                        ).files;
+
+                    for (
+                        let i = 0;
+                        i < images.length;
+                        i++
+                    ) {
+
+                        formData.append(
+                            "images",
+                            images[i]
+                        );
+
+                    }
+
+                    const res =
+                        await fetch(
+                            `${API_BASE}/api/create-ad`,
+                            {
+                                method: "POST",
+                                body: formData
+                            }
+                        );
+
+                    const data =
+                        await res.json();
+
+                    if (data.success) {
+
+                        alert(
+                            "Advertisement Posted Successfully!"
+                        );
+
+                        window.location.href =
+                            "my-ads.html";
+
+                    } else {
+
+                        alert(
+                            data.message
+                        );
+
+                    }
+
+                }
+            );
+
+
+    </script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

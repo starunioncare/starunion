@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Advertisement Details</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <div class="seller-container">
+
+        <div id="adDetails">
+
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script>
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const adId =
+            params.get("id");
+
+        async function loadAd() {
+
+            const res =
+                await fetch(
+                    "${API_BASE}/api/ads"
+                );
+
+            const ads =
+                await res.json();
+
+            const ad =
+                ads.find(
+                    ad =>
+                        ad.adId === adId
+                );
+
+            if (!ad) {
+
+                document.getElementById(
+                    "adDetails"
+                ).innerHTML = `
+
+                    <h2>
+                        Advertisement Not Found
+                    </h2>
+
+                `;
+
+                return;
+
+            }
+
+            document.getElementById(
+                "adDetails"
+            ).innerHTML = `
+
+<div class="public-ad-page">
+
+    <div class="public-top">
+
+        <div class="public-gallery">
+
+            ${ad.images && ad.images.length > 0
+
+                    ?
+
+                    `
+
+                <img
+                    class="main-ad-image"
+                    src="${API_BASE}/uploads/${ad.images[0]}"
+                    alt="${ad.businessName}">
+
+                <div class="thumb-row">
+
+                    ${ad.images.map(image => `
+
+                        <img
+                            class="thumb-image"
+                            src="${API_BASE}/uploads/${image}"
+                            alt="${ad.businessName}"
+                            onclick="document.querySelector('.main-ad-image').src='${API_BASE}/uploads/${image}'">
+
+                    `).join("")}
+
+                </div>
+
+                `
+
+                    :
+
+                    `
+
+                <img
+                    class="main-ad-image"
+                    src="https://via.placeholder.com/700x450"
+                    alt="No Image">
+
+                `
+
+                }
+
+        </div>
+
+        <div class="public-info">
+
+            <h1>
+
+                ${ad.businessName}
+
+            </h1>
+
+            <p>
+
+                <strong>Category</strong>
+
+                <br>
+
+                ${ad.category}
+
+            </p>
+
+            <p>
+
+                <strong>Location</strong>
+
+                <br>
+
+                ${ad.location}
+
+            </p>
+
+            <p>
+
+                <strong>Posted</strong>
+
+                <br>
+
+                ${new Date(ad.createdAt).toLocaleDateString()}
+
+            </p>
+
+            <div class="contact-buttons">
+
+                <a
+                    href="tel:${ad.phone}"
+                    class="call-btn">
+
+                    📞 Call Now
+
+                </a>
+
+                <a
+                    href="https://wa.me/${ad.whatsapp}"
+                    target="_blank"
+                    class="whatsapp-btn">
+
+                    💬 WhatsApp
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    ${ad.video
+
+                    ?
+
+                    `
+
+        <div class="public-video">
+
+            <h2>
+
+                Business Video
+
+            </h2>
+
+            <video controls width="100%">
+
+                <source
+                    src="${API_BASE}/uploads/${ad.video}"
+                    type="video/mp4">
+
+                Your browser does not support video playback.
+
+            </video>
+
+        </div>
+
+        `
+
+                    :
+
+                    ""
+
+                }
+
+    <div class="public-description">
+
+        <h2>
+
+            Description
+
+        </h2>
+
+        <p>
+
+            ${ad.description}
+
+        </p>
+
+    </div>
+
+    <div id="relatedAds">
+
+    </div>
+
+</div>
+
+            `;
+
+        }
+
+        loadAd();
+
+    </script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

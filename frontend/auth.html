@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login / Register - StarUnion</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <!-- LOGIN FORM -->
+        <div class="form-box" id="loginBox">
+            <h2>Login</h2>
+            <input type="email" placeholder="Email">
+            <input type="password" placeholder="Password">
+            <button onclick="loginUser()">Login</button>
+            <p>Don't have account? <span onclick="showRegister()">Register</span></p>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div class="form-box" id="registerBox" style="display:none;">
+            <span class="close-btn" onclick="goHome()">✖</span>
+            <h2>Register</h2>
+
+            <input type="text" placeholder="Full Name">
+            <input type="email" placeholder="Email">
+
+            <input type="text" placeholder="Mobile Number">
+
+            <input type="password" placeholder="Password">
+            <input type="password" placeholder="Confirm Password">
+
+            <select id="accountType" class="account-select">
+                <option value="">Select Account Type</option>
+                <option value="user">Normal User</option>
+                <option value="advertiser">Advertiser</option>
+            </select>
+
+            <div id="advertiserDocs" style="display:none;">
+
+                <label>Selfie Photo</label>
+                <input type="file" id="selfiePhoto" accept="image/*">
+
+                <label>Aadhar Front Side</label>
+                <input type="file" id="aadharFront" accept="image/*">
+
+                <label>Aadhar Back Side</label>
+                <input type="file" id="aadharBack" accept="image/*">
+
+            </div>
+
+            <input type="text" placeholder="Reference ID (Optional)">
+
+            <button onclick="registerUser()">Register</button>
+
+            <p>Already have account? <span onclick="showLogin()">Login</span></p>
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script src="auth.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "name": "Admin",
+    "email": "atozvehiclecare@gmail.com",
+    "mobile": "7434004841",
+    "password": "Admin123",
+    "accountType": "admin",
+    "status": "active"
+  }
+]

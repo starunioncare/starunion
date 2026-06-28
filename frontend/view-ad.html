@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Advertisement Details
+    </title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="seller-container">
+
+        <div id="adDetails">
+
+            Loading Advertisement...
+
+        </div>
+
+        <br>
+
+        <button onclick="goBack()">
+
+            ← Back
+
+        </button>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script>
+
+        const user =
+            JSON.parse(
+                localStorage.getItem("user")
+            );
+
+        if (
+            !user ||
+            user.accountType !==
+            "advertiser"
+        ) {
+
+            alert(
+                "Access Denied"
+            );
+
+            window.location.href =
+                "index.html";
+
+        }
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const adId =
+            params.get("id");
+
+        async function loadAd() {
+
+            const res =
+                await fetch(
+                    `${API_BASE}/api/ads`
+                );
+
+            const ads =
+                await res.json();
+
+            const ad =
+                ads.find(
+                    ad =>
+                        ad.adId === adId
+                );
+
+            if (!ad) {
+
+                document
+                    .getElementById(
+                        "adDetails"
+                    )
+                    .innerHTML =
+
+                    "<h2>Advertisement Not Found</h2>";
+
+                return;
+
+            }
+
+            document
+                .getElementById(
+                    "adDetails"
+                )
+                .innerHTML = `
+
+                <div class="seller-card">
+
+                    <h1>
+                        ${ad.businessName}
+                    </h1>
+
+                    <p>
+
+                        <strong>
+                        Advertisement ID:
+                        </strong>
+
+                        ${ad.adId}
+
+                    </p>
+
+                    <p>
+
+                        <strong>
+                        Category:
+                        </strong>
+
+                        ${ad.category}
+
+                    </p>
+
+                    <p>
+
+                        <strong>
+                        Location:
+                        </strong>
+
+                        ${ad.location}
+
+                    </p>
+
+                    <p>
+
+                        <strong>
+                        Description:
+                        </strong>
+
+                        ${ad.description}
+
+                    </p>
+
+                    <p>
+
+                        <strong>
+                        Phone:
+                        </strong>
+
+                        ${ad.phone}
+
+                    </p>
+
+                    <p>
+
+                        <strong>
+                        WhatsApp:
+                        </strong>
+
+                        ${ad.whatsapp}
+
+                    </p>
+
+                    <p>
+
+                        <strong>
+                        Status:
+                        </strong>
+
+                        ${ad.status === "active"
+                    ? "🟢 Active"
+                    : "🔴 Banned"
+                }
+
+                    </p>
+
+                    <p>
+
+                        <strong>
+                        Created:
+                        </strong>
+
+                        ${new Date(
+                    ad.createdAt
+                ).toLocaleString()}
+
+                    </p>
+
+                    <br>
+
+                    <button
+                    onclick="editAd()">
+
+                    Edit Advertisement
+
+                    </button>
+
+                </div>
+
+            `;
+
+        }
+
+        function editAd() {
+
+            window.location.href =
+                `edit-ad.html?id=${adId}`;
+
+        }
+
+        function goBack() {
+
+            window.location.href =
+                "my-ads.html";
+
+        }
+
+        loadAd();
+
+    </script>
+
+</body>
+
+</html>

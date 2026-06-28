@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Details - StarUnion</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="seller-container">
+
+        <h1>Seller Details</h1>
+
+        <!-- SELLER INFO -->
+        <div class="seller-card" id="sellerInfo">
+
+        </div>
+
+        <!-- DOCUMENTS -->
+        <div class="seller-card" id="documentsSection">
+
+        </div>
+
+        <!-- ADS -->
+        <div class="seller-card">
+
+            <h2>Advertisements</h2>
+
+            <table class="admin-table">
+
+                <thead>
+                    <tr>
+                        <th>Ad ID</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="adsTableBody">
+
+                    <tr>
+                        <td colspan="5">
+                            No advertisements found
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user || user.accountType !== "admin") {
+
+            alert("Access Denied");
+
+            window.location.href = "index.html";
+        }
+    </script>
+
+    <script>
+
+        async function loadSellerDetails() {
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            const sellerUserId =
+                params.get("id");
+
+            const usersRes =
+                await fetch(
+                    `${API_BASE}/api/users`
+                );
+
+            const users =
+                await usersRes.json();
+
+            const seller =
+                users.find(
+                    user =>
+                        String(user.id) === sellerUserId
+                );
+
+            if (!seller) {
+
+                document.getElementById(
+                    "sellerInfo"
+                ).innerHTML =
+                    "<h2>Seller Not Found</h2>";
+
+                return;
+            }
+
+            document.getElementById(
+                "sellerInfo"
+            ).innerHTML = `
+
+        <h2>${seller.name}</h2>
+
+        <p>
+            <strong>Seller ID:</strong>
+            ${seller.sellerId}
+        </p>
+
+        <p>
+            <strong>Mobile:</strong>
+            ${seller.mobile}
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            ${seller.email}
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+            ${seller.status}
+        </p>
+
+        <p>
+            <strong>Approved At:</strong>
+            ${seller.approvedAt || "Not Approved"}
+        </p>
+
+        <p>
+            <strong>Rejected At:</strong>
+            ${seller.rejectedAt || "Not Rejected"}
+        </p>
+
+        <p>
+            <strong>Rejection Reason:</strong>
+            ${seller.rejectionReason || "-"}
+        </p>
+
+        <div style="margin-top:15px;">
+
+    ${seller.status === "pending"
+                    ?
+                    `
+        <button
+        onclick="approveSeller('${seller.id}')">
+        Approve
+        </button>
+
+        <button
+        onclick="rejectSeller('${seller.id}')">
+        Reject
+        </button>
+        `
+                    :
+                    ""
+                }
+
+    ${seller.status === "banned"
+                    ?
+                    `
+        <button
+        onclick="unbanSeller('${seller.id}')">
+        Unban
+        </button>
+        `
+                    :
+                    `
+        <button
+        onclick="banSeller('${seller.id}')">
+        Ban
+        </button>
+        `
+                }
+
+</div>
+
+    `;
+
+            document.getElementById(
+                "documentsSection"
+            ).innerHTML = `
+
+        <h2>Documents</h2>
+
+        <div class="document-grid">
+
+            <div class="document-box">
+
+                <h4>Selfie</h4>
+
+                <img
+                src="${seller.selfiePhoto
+                    ? `${API_BASE}/uploads/${seller.selfiePhoto}`
+                    : 'https://via.placeholder.com/250x150?text=No+Selfie'}"
+                width="250">
+
+            </div>
+
+            <div class="document-box">
+
+                <h4>Aadhar Front</h4>
+
+                <img
+                src="${seller.aadharFront
+                    ? `${API_BASE}/uploads/${seller.aadharFront}`
+                    : 'https://via.placeholder.com/250x150?text=No+Aadhar+Front'}"
+                width="250">
+
+            </div>
+
+            <div class="document-box">
+
+                <h4>Aadhar Back</h4>
+
+                <img
+                src="${seller.aadharBack
+                    ? `${API_BASE}/uploads/${seller.aadharBack}`
+                    : 'https://via.placeholder.com/250x150?text=No+Aadhar+Back'}"
+                width="250">
+
+            </div>
+
+        </div>
+
+    `;
+
+            loadSellerAds(
+                seller.sellerId
+            );
+
+        }
+
+        loadSellerDetails();
+
+        async function loadSellerAds(
+            sellerId
+        ) {
+
+            const res =
+                await fetch(
+                    `${API_BASE}/api/ads`
+                );
+
+            const ads =
+                await res.json();
+
+            const sellerAds =
+                ads.filter(
+                    ad =>
+                        ad.sellerId === sellerId
+                );
+
+            document.getElementById(
+                "sellerInfo"
+            ).innerHTML += `
+
+        <p>
+            <strong>Total Ads:</strong>
+            ${sellerAds.length}
+        </p>
+
+    `;
+
+            const table =
+                document.getElementById(
+                    "adsTableBody"
+                );
+
+            table.innerHTML = "";
+
+            if (sellerAds.length === 0) {
+
+                table.innerHTML = `
+
+        <tr>
+
+            <td colspan="5">
+                No advertisements found
+            </td>
+
+        </tr>
+
+        `;
+
+                return;
+
+            }
+
+            sellerAds.forEach(ad => {
+
+                table.innerHTML += `
+
+        <tr>
+
+            <td>${ad.adId}</td>
+
+            <td>
+                ${ad.businessName}
+            </td>
+
+            <td>
+                ${ad.category}
+            </td>
+
+            <td>
+                ${ad.status}
+            </td>
+
+            <td>
+
+                <button
+                onclick="removeAd('${ad.adId}')">
+
+                Remove
+
+                </button>
+
+                ${ad.status === "banned"
+                        ?
+                        `
+                    <button
+                    onclick="restoreAd('${ad.adId}')">
+
+                    Restore
+
+                    </button>
+                    `
+                        :
+                        `
+                    <button
+                    onclick="banAd('${ad.adId}')">
+
+                    Ban
+
+                    </button>
+                    `
+                    }
+
+            </td>
+
+        </tr>
+
+        `;
+
+            });
+
+        }
+        async function removeAd(adId) {
+
+            const confirmDelete =
+                confirm(
+                    "Remove this advertisement?"
+                );
+
+            if (!confirmDelete) return;
+
+            await fetch(
+                `${API_BASE}/api/delete-ad/${adId}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+            loadSellerDetails();
+
+        }
+
+        async function banAd(adId) {
+
+            await fetch(
+                `${API_BASE}/api/ban-ad/${adId}`,
+                {
+                    method: "PUT"
+                }
+            );
+
+            loadSellerDetails();
+
+        }
+
+        async function restoreAd(adId) {
+
+            await fetch(
+                `${API_BASE}/api/restore-ad/${adId}`,
+                {
+                    method: "PUT"
+                }
+            );
+
+            loadSellerDetails();
+
+        }
+
+        async function approveSeller(id) {
+
+            await fetch(
+                `${API_BASE}/api/approve-seller/${id}`,
+                {
+                    method: "PUT"
+                }
+            );
+
+            loadSellerDetails();
+
+        }
+
+        async function rejectSeller(id) {
+
+            const reason =
+                prompt(
+                    "Reason for rejection:"
+                );
+
+            await fetch(
+                `${API_BASE}/api/reject-seller/${id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body: JSON.stringify({
+                        reason
+                    })
+                }
+            );
+
+            loadSellerDetails();
+
+        }
+
+        async function banSeller(id) {
+
+            await fetch(
+                `${API_BASE}/api/ban-user/${id}`,
+                {
+                    method: "PUT"
+                }
+            );
+
+            loadSellerDetails();
+
+        }
+
+        async function unbanSeller(id) {
+
+            await fetch(
+                `${API_BASE}/api/unban-user/${id}`,
+                {
+                    method: "PUT"
+                }
+            );
+
+            loadSellerDetails();
+
+        }
+
+    </script>
+
+</body>
+
+</html>

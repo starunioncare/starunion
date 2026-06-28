@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Advertisements - StarUnion</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="seller-container">
+
+        <h1>All Advertisements</h1>
+
+        <div class="search-bar">
+
+            <input type="text" id="searchInput" placeholder="Search Business Name">
+
+            <input type="text" id="locationInput" placeholder="Search Location">
+
+            <select id="categoryFilter">
+
+                <option value="">
+                    All Categories
+                </option>
+
+                <option>
+                    Salon
+                </option>
+
+                <option>
+                    Restaurant
+                </option>
+
+                <option>
+                    Medical
+                </option>
+
+                <option>
+                    Jobs
+                </option>
+
+                <option>
+                    Freelancer
+                </option>
+
+            </select>
+
+        </div>
+
+        <div id="adsContainer">
+
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+
+    <script>
+
+        // ======================================
+        // GET SEARCH PARAMETERS FROM URL
+        // ======================================
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const searchParam =
+            params.get("search") || "";
+
+        const locationParam =
+            params.get("location") || "";
+
+        const categoryParam =
+            params.get("category") || "";
+
+        async function loadAds() {
+
+            const res =
+                await fetch(
+                    `${API_BASE}/api/ads`
+                );
+
+            const ads =
+                await res.json();
+
+            if (
+                !document.getElementById("searchInput").dataset.loaded
+            ) {
+
+                document.getElementById(
+                    "searchInput"
+                ).value = searchParam;
+
+                document.getElementById(
+                    "locationInput"
+                ).value = locationParam;
+
+                document.getElementById(
+                    "categoryFilter"
+                ).value = categoryParam;
+
+                document.getElementById(
+                    "searchInput"
+                ).dataset.loaded = "true";
+
+            }
+
+            const search =
+                document.getElementById(
+                    "searchInput"
+                ).value.toLowerCase();
+
+            const location =
+                document.getElementById(
+                    "locationInput"
+                ).value.toLowerCase();
+
+            const category =
+                document.getElementById(
+                    "categoryFilter"
+                ).value;
+
+            const activeAds =
+                ads.filter(ad => {
+
+                    if (
+                        ad.status !== "active"
+                    ) {
+                        return false;
+                    }
+
+                    const matchesSearch =
+                        ad.businessName
+                            .toLowerCase()
+                            .includes(search);
+
+                    const matchesLocation =
+                        ad.location
+                            .toLowerCase()
+                            .includes(location);
+
+                    const matchesCategory =
+                        !category ||
+                        ad.category === category;
+
+                    return (
+                        matchesSearch &&
+                        matchesLocation &&
+                        matchesCategory
+                    );
+
+                });
+
+            const container =
+                document.getElementById(
+                    "adsContainer"
+                );
+
+            container.innerHTML = "";
+
+            if (
+                activeAds.length === 0
+            ) {
+
+                container.innerHTML = `
+
+            <h3>
+                No advertisements found
+            </h3>
+
+        `;
+
+                return;
+
+            }
+
+            activeAds.forEach(ad => {
+
+                const image =
+
+                    ad.images &&
+                        ad.images.length > 0
+
+                        ?
+
+                        `${API_BASE}/uploads/${ad.images[0]}`
+
+                        :
+
+                        "https://via.placeholder.com/500x320";
+
+                const postedDate =
+                    new Date(ad.createdAt)
+                        .toLocaleDateString();
+
+                container.innerHTML += `
+
+<div class="market-card">
+
+    <div class="market-image">
+
+        <img
+            src="${image}"
+            alt="${ad.businessName}">
+
+        <span class="verified-badge">
+
+            ✔ Verified
+
+        </span>
+
+    </div>
+
+    <div class="market-body">
+
+        <h2>
+
+            ${ad.businessName}
+
+        </h2>
+
+        <p>
+
+            <i class="fa-solid fa-location-dot"></i>
+
+            ${ad.location}
+
+        </p>
+
+        <p>
+
+            <i class="fa-solid fa-layer-group"></i>
+
+            ${ad.category}
+
+        </p>
+
+        <p>
+
+            <i class="fa-regular fa-calendar"></i>
+
+            ${postedDate}
+
+        </p>
+
+        <button
+        class="details-btn"
+        onclick="window.location.href='view-public-ad.html?id=${ad.adId}'">
+
+            View Details
+
+        </button>
+
+    </div>
+
+</div>
+
+`;
+
+            });
+
+        }
+
+        document
+            .getElementById(
+                "searchInput"
+            )
+            .addEventListener(
+                "input",
+                loadAds
+            );
+
+        document
+            .getElementById(
+                "locationInput"
+            )
+            .addEventListener(
+                "input",
+                loadAds
+            );
+
+        document
+            .getElementById(
+                "categoryFilter"
+            )
+            .addEventListener(
+                "change",
+                loadAds
+            );
+
+        loadAds();
+
+    </script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
